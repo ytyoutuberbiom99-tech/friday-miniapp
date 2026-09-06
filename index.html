@@ -2,6 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>F.R.I.D.A.Y.</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -91,7 +92,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 15px;
-            text-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
         }
         
         .subtitle {
@@ -247,7 +247,7 @@
         </div>
         <div class="title">F.R.I.D.A.Y.</div>
         <div class="subtitle">TOPOVSK INDUSTRIES</div>
-        <button class="startBtn" onclick="startApp()">РќРђР§РђРўР¬</button>
+        <button class="startBtn" onclick="startApp()">НАЧАТЬ</button>
     </div>
 
     <div id="mainApp">
@@ -261,14 +261,14 @@
         
         <div id="chat">
             <div class="message ai" style="text-align:center;padding:30px 20px;">
-                <div style="font-size:48px;margin-bottom:15px;">рџ”·</div>
-                <h2 style="margin-bottom:8px;">Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ, Р±РѕСЃСЃ</h2>
-                <p style="color:#00d4ff;font-size:13px;">Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ.<br>Р§РµРј РјРѕРіСѓ РїРѕРјРѕС‡СЊ?</p>
+                <div style="font-size:48px;margin-bottom:15px;">🔷</div>
+                <h2 style="margin-bottom:8px;">Добро пожаловать, босс</h2>
+                <p style="color:#00d4ff;font-size:13px;">Все системы активны. Готова к работе.<br>Чем могу помочь?</p>
             </div>
         </div>
         
         <div class="inputArea">
-            <input type="text" id="msgInput" placeholder="Р—Р°РїСЂРѕСЃ, Р±РѕСЃСЃ..." autocomplete="off">
+            <input type="text" id="msgInput" placeholder="Запрос, босс..." autocomplete="off">
             <button id="sendBtn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         </div>
     </div>
@@ -290,7 +290,7 @@
             document.getElementById("mainApp").style.display = "flex";
             
             setTimeout(function() {
-                addMessage("ai", " F.R.I.D.A.Y. РѕРЅР»Р°Р№РЅ. Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ, Р±РѕСЃСЃ!");
+                addMessage("ai", "🔷 F.R.I.D.A.Y. онлайн. Все системы активны. Готова к работе, босс!");
             }, 500);
         }
         
@@ -340,11 +340,11 @@
                 
                 setTimeout(function() {
                     removeTyping();
-                    addMessage("ai", "вњ… РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ. РћС‚РІРµС‚ РїСЂРёРґС‘С‚ РІ С‡Р°С‚.");
+                    addMessage("ai", "✅ Сообщение отправлено. Ответ придёт в чат.");
                 }, 1500);
             } catch (e) {
                 removeTyping();
-                addMessage("ai", "вќЊ РћС€РёР±РєР°: " + e.message);
+                addMessage("ai", "❌ Ошибка: " + e.message);
             } finally {
                 msgInput.disabled = false;
                 sendBtn.disabled = false;
