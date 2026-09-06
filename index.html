@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,13 +7,13 @@
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-        body { background: #0a0e27; color: #fff; height: 100vh; overflow: hidden; }
+        body { background: #000; color: #fff; height: 100vh; overflow: hidden; }
         
         #startScreen {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
-            background: radial-gradient(circle at center, #0d1b3e 0%, #0a0e27 100%);
+            background: #000;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -21,76 +21,104 @@
             z-index: 1000;
         }
         
-        .reactor {
-            width: 120px;
-            height: 120px;
-            margin-bottom: 40px;
+        .arc-reactor {
+            width: 200px;
+            height: 200px;
             position: relative;
+            margin-bottom: 50px;
         }
         
-        .reactor-core {
+        .reactor-center {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             width: 60px; height: 60px;
-            background: radial-gradient(circle, #fff 0%, #00d4ff 40%, #006699 70%, transparent 100%);
+            background: radial-gradient(circle, #fff 0%, #00d4ff 30%, #0066cc 70%, transparent 100%);
             border-radius: 50%;
-            box-shadow: 0 0 40px #00d4ff, 0 0 80px rgba(0,212,255,0.4);
-            animation: pulse 1.5s ease-in-out infinite;
+            box-shadow: 0 0 60px #00d4ff, 0 0 120px #00d4ff, inset 0 0 20px #fff;
+            animation: reactorPulse 1.5s ease-in-out infinite;
         }
         
-        @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); }
-            50% { transform: translate(-50%, -50%) scale(1.15); }
+        @keyframes reactorPulse {
+            0%, 100% { 
+                transform: translate(-50%, -50%) scale(1);
+                box-shadow: 0 0 60px #00d4ff, 0 0 120px #00d4ff, inset 0 0 20px #fff;
+            }
+            50% { 
+                transform: translate(-50%, -50%) scale(1.1);
+                box-shadow: 0 0 80px #00d4ff, 0 0 160px #00d4ff, inset 0 0 30px #fff;
+            }
         }
         
         .ring {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            border: 3px solid rgba(0,212,255,0.3);
+            border: 2px solid rgba(0, 212, 255, 0.4);
             border-radius: 50%;
         }
         
-        .ring:nth-child(2) { width: 90px; height: 90px; border-top-color: #00d4ff; animation: spin 2s linear infinite; }
-        .ring:nth-child(3) { width: 120px; height: 120px; border-right-color: #00d4ff; animation: spin 3s linear infinite reverse; }
+        .ring:nth-child(2) {
+            width: 100px; height: 100px;
+            border-top-color: #00d4ff;
+            border-bottom-color: transparent;
+            animation: rotate 2s linear infinite;
+        }
         
-        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+        .ring:nth-child(3) {
+            width: 140px; height: 140px;
+            border-left-color: #00d4ff;
+            border-right-color: transparent;
+            animation: rotate 3s linear infinite reverse;
+        }
+        
+        .ring:nth-child(4) {
+            width: 180px; height: 180px;
+            border-top-color: #00d4ff;
+            border-bottom-color: transparent;
+            animation: rotate 4s linear infinite;
+        }
+        
+        @keyframes rotate {
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
         
         .title {
-            font-size: 42px;
+            font-size: 48px;
             font-weight: 900;
-            letter-spacing: 8px;
-            background: linear-gradient(135deg, #00d4ff 0%, #fff 100%);
+            letter-spacing: 12px;
+            background: linear-gradient(135deg, #00d4ff 0%, #fff 50%, #00d4ff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
+            text-shadow: 0 0 40px rgba(0, 212, 255, 0.5);
         }
         
         .subtitle {
             font-size: 14px;
-            letter-spacing: 4px;
-            color: rgba(0,212,255,0.6);
-            margin-bottom: 50px;
+            letter-spacing: 6px;
+            color: #00d4ff;
+            margin-bottom: 60px;
+            opacity: 0.8;
         }
         
         .startBtn {
-            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            background: linear-gradient(135deg, #00d4ff 0%, #0066cc 100%);
             border: none;
             border-radius: 30px;
-            padding: 16px 60px;
+            padding: 18px 70px;
             font-size: 18px;
             font-weight: 700;
             color: #000;
             cursor: pointer;
-            box-shadow: 0 4px 20px rgba(0,212,255,0.5);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.6);
             transition: all 0.3s;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
         }
         
         .startBtn:hover {
             transform: scale(1.05);
-            box-shadow: 0 6px 30px rgba(0,212,255,0.8);
+            box-shadow: 0 0 50px rgba(0, 212, 255, 0.9);
         }
         
         .startBtn:active { transform: scale(0.98); }
@@ -102,27 +130,28 @@
         }
         
         .header {
-            background: linear-gradient(180deg, #0d1b3e 0%, #0a0e27 100%);
+            background: linear-gradient(180deg, #0d1b3e 0%, #000 100%);
             padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 12px;
-            border-bottom: 1px solid rgba(0,212,255,0.3);
+            border-bottom: 1px solid rgba(0, 212, 255, 0.3);
         }
         
         .avatar {
             width: 44px; height: 44px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            background: linear-gradient(135deg, #00d4ff 0%, #0066cc 100%);
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 700;
             color: #000;
             font-size: 20px;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.6);
         }
         
-        .userName { font-size: 16px; font-weight: 600; }
+        .userName { font-size: 16px; font-weight: 600; color: #fff; }
         .userStatus { font-size: 11px; color: #00d4ff; }
         
         #chat {
@@ -144,30 +173,30 @@
         
         .user {
             align-self: flex-end;
-            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            background: linear-gradient(135deg, #00d4ff 0%, #0066cc 100%);
             color: #000;
             border-bottom-right-radius: 4px;
         }
         
         .ai {
             align-self: flex-start;
-            background: rgba(22,27,34,0.8);
-            border: 1px solid rgba(0,212,255,0.2);
+            background: rgba(13, 27, 62, 0.8);
+            border: 1px solid rgba(0, 212, 255, 0.3);
             border-bottom-left-radius: 4px;
         }
         
         .inputArea {
             padding: 16px 20px;
-            background: linear-gradient(0deg, #000 0%, #0d1b3e 100%);
-            border-top: 1px solid rgba(0,212,255,0.3);
+            background: #000;
+            border-top: 1px solid rgba(0, 212, 255, 0.3);
             display: flex;
             gap: 10px;
         }
         
         #msgInput {
             flex: 1;
-            background: rgba(0,212,255,0.1);
-            border: 1px solid rgba(0,212,255,0.3);
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.3);
             border-radius: 26px;
             padding: 14px 20px;
             color: #fff;
@@ -178,7 +207,7 @@
         #msgInput:focus { border-color: #00d4ff; }
         
         #sendBtn {
-            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            background: linear-gradient(135deg, #00d4ff 0%, #0066cc 100%);
             border: none;
             border-radius: 50%;
             width: 52px; height: 52px;
@@ -186,8 +215,11 @@
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
         }
         
+        #sendBtn:hover { transform: scale(1.1); box-shadow: 0 0 30px rgba(0, 212, 255, 0.8); }
+        #sendBtn:active { transform: scale(0.95); }
         #sendBtn svg { width: 22px; height: 22px; fill: #000; }
         
         .typing { display: flex; gap: 5px; padding: 14px 18px; }
@@ -206,10 +238,10 @@
     </style>
 </head>
 <body>
-    <!-- START SCREEN -->
     <div id="startScreen">
-        <div class="reactor">
-            <div class="reactor-core"></div>
+        <div class="arc-reactor">
+            <div class="reactor-center"></div>
+            <div class="ring"></div>
             <div class="ring"></div>
             <div class="ring"></div>
         </div>
@@ -218,7 +250,6 @@
         <button class="startBtn" onclick="startApp()">РќРђР§РђРўР¬</button>
     </div>
 
-    <!-- MAIN APP -->
     <div id="mainApp">
         <div class="header">
             <div class="avatar" id="avatar">T</div>
@@ -230,7 +261,7 @@
         
         <div id="chat">
             <div class="message ai" style="text-align:center;padding:30px 20px;">
-                <div style="font-size:48px;margin-bottom:15px;"></div>
+                <div style="font-size:48px;margin-bottom:15px;">рџ”·</div>
                 <h2 style="margin-bottom:8px;">Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ, Р±РѕСЃСЃ</h2>
                 <p style="color:#00d4ff;font-size:13px;">Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ.<br>Р§РµРј РјРѕРіСѓ РїРѕРјРѕС‡СЊ?</p>
             </div>
@@ -259,7 +290,7 @@
             document.getElementById("mainApp").style.display = "flex";
             
             setTimeout(function() {
-                addMessage("ai", "рџ”· F.R.I.D.A.Y. РѕРЅР»Р°Р№РЅ. Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ, Р±РѕСЃСЃ!");
+                addMessage("ai", " F.R.I.D.A.Y. РѕРЅР»Р°Р№РЅ. Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ, Р±РѕСЃСЃ!");
             }, 500);
         }
         
