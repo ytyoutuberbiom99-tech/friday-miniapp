@@ -1,18 +1,15 @@
-
 <!DOCTYPE html>
-<html lang="ru">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>F.R.I.D.A.Y.</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        body { background: #0a0e27; color: #fff; height: 100vh; overflow: hidden; display: flex; flex-direction: column; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+        body { background: #0a0e27; color: #fff; height: 100vh; overflow: hidden; }
         
-        /* SPLASH SCREEN */
-        #splash {
+        #startScreen {
             position: fixed;
             top: 0; left: 0;
             width: 100%; height: 100%;
@@ -22,12 +19,15 @@
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            animation: fadeOut 0.8s ease-out 3s forwards;
         }
-        @keyframes fadeOut { to { opacity: 0; visibility: hidden; } }
         
-        .reactor-container { position: relative; width: 150px; height: 150px; margin-bottom: 40px; }
-        .reactor { width: 100%; height: 100%; position: relative; }
+        .reactor {
+            width: 120px;
+            height: 120px;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
         .reactor-core {
             position: absolute;
             top: 50%; left: 50%;
@@ -35,151 +35,210 @@
             width: 60px; height: 60px;
             background: radial-gradient(circle, #fff 0%, #00d4ff 40%, #006699 70%, transparent 100%);
             border-radius: 50%;
-            box-shadow: 0 0 40px rgba(0, 212, 255, 0.8), 0 0 80px rgba(0, 212, 255, 0.4);
+            box-shadow: 0 0 40px #00d4ff, 0 0 80px rgba(0,212,255,0.4);
             animation: pulse 1.5s ease-in-out infinite;
         }
+        
         @keyframes pulse {
-            0%, 100% { transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 40px rgba(0, 212, 255, 0.8), 0 0 80px rgba(0, 212, 255, 0.4); }
-            50% { transform: translate(-50%, -50%) scale(1.1); box-shadow: 0 0 60px rgba(0, 212, 255, 1), 0 0 120px rgba(0, 212, 255, 0.6); }
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.15); }
         }
-        .reactor-ring {
+        
+        .ring {
             position: absolute;
             top: 50%; left: 50%;
             transform: translate(-50%, -50%);
-            border: 3px solid rgba(0, 212, 255, 0.3);
+            border: 3px solid rgba(0,212,255,0.3);
             border-radius: 50%;
         }
-        .reactor-ring:nth-child(2) { width: 90px; height: 90px; border-top-color: #00d4ff; animation: rotate 2s linear infinite; }
-        .reactor-ring:nth-child(3) { width: 120px; height: 120px; border-right-color: #00d4ff; animation: rotate 3s linear infinite reverse; }
-        .reactor-ring:nth-child(4) { width: 150px; height: 150px; border-bottom-color: #00d4ff; animation: rotate 4s linear infinite; }
-        @keyframes rotate { to { transform: translate(-50%, -50%) rotate(360deg); } }
         
-        .splash-title {
+        .ring:nth-child(2) { width: 90px; height: 90px; border-top-color: #00d4ff; animation: spin 2s linear infinite; }
+        .ring:nth-child(3) { width: 120px; height: 120px; border-right-color: #00d4ff; animation: spin 3s linear infinite reverse; }
+        
+        @keyframes spin { to { transform: translate(-50%, -50%) rotate(360deg); } }
+        
+        .title {
             font-size: 42px;
             font-weight: 900;
             letter-spacing: 8px;
-            background: linear-gradient(135deg, #00d4ff 0%, #fff 50%, #00d4ff 100%);
+            background: linear-gradient(135deg, #00d4ff 0%, #fff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-            animation: slideUp 0.8s ease-out 0.3s both;
+            margin-bottom: 10px;
         }
-        .splash-subtitle {
+        
+        .subtitle {
             font-size: 14px;
             letter-spacing: 4px;
-            color: rgba(0, 212, 255, 0.6);
-            margin-top: 15px;
-            animation: slideUp 0.8s ease-out 0.5s both;
+            color: rgba(0,212,255,0.6);
+            margin-bottom: 50px;
         }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
-        .loading-dots { display: flex; gap: 10px; margin-top: 40px; animation: slideUp 0.8s ease-out 0.7s both; }
-        .loading-dots span { width: 10px; height: 10px; background: #00d4ff; border-radius: 50%; animation: bounce 1.4s ease-in-out infinite; }
-        .loading-dots span:nth-child(2) { animation-delay: 0.2s; }
-        .loading-dots span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); opacity: 0; } 40% { transform: scale(1); opacity: 1; } }
         
-        /* MAIN APP */
-        #app { display: flex; flex-direction: column; height: 100vh; opacity: 0; animation: fadeIn 0.5s ease-out 3.3s forwards; }
-        @keyframes fadeIn { to { opacity: 1; } }
+        .startBtn {
+            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            border: none;
+            border-radius: 30px;
+            padding: 16px 60px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #000;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(0,212,255,0.5);
+            transition: all 0.3s;
+            letter-spacing: 2px;
+        }
         
-        /* HEADER */
-        .header { background: linear-gradient(180deg, #0d1b3e 0%, #0a0e27 100%); padding: 16px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid rgba(0, 212, 255, 0.3); }
-        .user-info { display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #00d4ff 0%, #006699 100%); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #000; font-size: 20px; box-shadow: 0 0 20px rgba(0, 212, 255, 0.6); }
-        .user-details { display: flex; flex-direction: column; }
-        .user-name { font-size: 16px; font-weight: 600; color: #fff; }
-        .user-status { font-size: 11px; color: #00d4ff; margin-top: 2px; }
-        .settings-btn { background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); color: #00d4ff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 20px; }
+        .startBtn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 30px rgba(0,212,255,0.8);
+        }
         
-        /* CHAT */
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 16px; }
-        .welcome { text-align: center; padding: 40px 20px; animation: welcomeSlide 0.8s ease-out; }
-        @keyframes welcomeSlide { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .welcome-icon { width: 100px; height: 100px; margin: 0 auto 20px; }
-        .welcome-reactor { width: 100%; height: 100%; background: radial-gradient(circle, #fff 0%, #00d4ff 40%, #006699 70%, transparent 100%); border-radius: 50%; box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); animation: reactorPulse 2s ease-in-out infinite; }
-        @keyframes reactorPulse { 0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(0, 212, 255, 0.8); } 50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(0, 212, 255, 1); } }
-        .welcome h1 { font-size: 32px; font-weight: 900; letter-spacing: 4px; margin-bottom: 10px; background: linear-gradient(135deg, #00d4ff 0%, #fff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .welcome p { color: rgba(0, 212, 255, 0.7); font-size: 14px; line-height: 1.6; }
-        .suggestions { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 30px; }
-        .suggestion-btn { background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 12px; padding: 16px; color: #fff; font-size: 14px; cursor: pointer; text-align: left; }
-        .suggestion-btn:hover { background: rgba(0, 212, 255, 0.2); border-color: #00d4ff; transform: translateY(-2px); }
-        .suggestion-btn .icon { font-size: 24px; margin-bottom: 8px; display: block; }
+        .startBtn:active { transform: scale(0.98); }
         
-        /* MESSAGES */
-        .message { display: flex; gap: 12px; max-width: 85%; animation: messageSlide 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
-        @keyframes messageSlide { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-        .message.user { align-self: flex-end; flex-direction: row-reverse; }
-        .message.ai { align-self: flex-start; }
-        .msg-avatar { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 700; flex-shrink: 0; }
-        .user .msg-avatar { background: linear-gradient(135deg, #00d4ff 0%, #006699 100%); color: #000; }
-        .ai .msg-avatar { background: linear-gradient(135deg, #00d4ff 0%, #006699 100%); color: #000; box-shadow: 0 0 15px rgba(0, 212, 255, 0.5); }
-        .msg-content { background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.2); padding: 14px 18px; border-radius: 18px; font-size: 15px; line-height: 1.5; max-width: 100%; word-wrap: break-word; color: #fff; }
-        .user .msg-content { background: linear-gradient(135deg, #00d4ff 0%, #006699 100%); color: #000; border: none; border-bottom-right-radius: 4px; }
-        .ai .msg-content { border-bottom-left-radius: 4px; }
-        .typing { display: flex; gap: 5px; padding: 18px; }
-        .typing span { width: 8px; height: 8px; background: #00d4ff; border-radius: 50%; animation: typingBounce 1.4s infinite; }
+        #mainApp {
+            display: none;
+            height: 100vh;
+            flex-direction: column;
+        }
+        
+        .header {
+            background: linear-gradient(180deg, #0d1b3e 0%, #0a0e27 100%);
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(0,212,255,0.3);
+        }
+        
+        .avatar {
+            width: 44px; height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+            font-size: 20px;
+        }
+        
+        .userName { font-size: 16px; font-weight: 600; }
+        .userStatus { font-size: 11px; color: #00d4ff; }
+        
+        #chat {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        
+        .message {
+            max-width: 85%;
+            padding: 14px 18px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        
+        .user {
+            align-self: flex-end;
+            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            color: #000;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .ai {
+            align-self: flex-start;
+            background: rgba(22,27,34,0.8);
+            border: 1px solid rgba(0,212,255,0.2);
+            border-bottom-left-radius: 4px;
+        }
+        
+        .inputArea {
+            padding: 16px 20px;
+            background: linear-gradient(0deg, #000 0%, #0d1b3e 100%);
+            border-top: 1px solid rgba(0,212,255,0.3);
+            display: flex;
+            gap: 10px;
+        }
+        
+        #msgInput {
+            flex: 1;
+            background: rgba(0,212,255,0.1);
+            border: 1px solid rgba(0,212,255,0.3);
+            border-radius: 26px;
+            padding: 14px 20px;
+            color: #fff;
+            font-size: 15px;
+            outline: none;
+        }
+        
+        #msgInput:focus { border-color: #00d4ff; }
+        
+        #sendBtn {
+            background: linear-gradient(135deg, #00d4ff 0%, #006699 100%);
+            border: none;
+            border-radius: 50%;
+            width: 52px; height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        
+        #sendBtn svg { width: 22px; height: 22px; fill: #000; }
+        
+        .typing { display: flex; gap: 5px; padding: 14px 18px; }
+        .typing span {
+            width: 8px; height: 8px;
+            background: #00d4ff;
+            border-radius: 50%;
+            animation: bounce 1.4s infinite;
+        }
         .typing span:nth-child(2) { animation-delay: 0.2s; }
         .typing span:nth-child(3) { animation-delay: 0.4s; }
-        @keyframes typingBounce { 0%, 60%, 100% { transform: translateY(0); opacity: 0.4; } 30% { transform: translateY(-10px); opacity: 1; } }
-        
-        /* INPUT */
-        .input-container { background: linear-gradient(0deg, #000 0%, #0d1b3e 100%); padding: 16px 20px; border-top: 1px solid rgba(0, 212, 255, 0.3); }
-        .input-wrapper { max-width: 800px; margin: 0 auto; display: flex; gap: 12px; }
-        #msg-input { flex: 1; background: rgba(0, 212, 255, 0.1); border: 1px solid rgba(0, 212, 255, 0.3); border-radius: 26px; padding: 14px 20px; color: #fff; font-size: 15px; outline: none; }
-        #msg-input:focus { border-color: #00d4ff; box-shadow: 0 0 20px rgba(0, 212, 255, 0.3); }
-        #msg-input::placeholder { color: rgba(0, 212, 255, 0.4); }
-        #send-btn { background: linear-gradient(135deg, #00d4ff 0%, #006699 100%); border: none; border-radius: 50%; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 20px rgba(0, 212, 255, 0.5); flex-shrink: 0; }
-        #send-btn:hover { transform: scale(1.1); box-shadow: 0 6px 30px rgba(0, 212, 255, 0.8); }
-        #send-btn:active { transform: scale(0.95); }
-        #send-btn svg { width: 22px; height: 22px; fill: #000; }
+        @keyframes bounce {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-10px); opacity: 1; }
+        }
     </style>
 </head>
 <body>
-    <div id="splash">
-        <div class="reactor-container">
-            <div class="reactor">
-                <div class="reactor-core"></div>
-                <div class="reactor-ring"></div>
-                <div class="reactor-ring"></div>
-                <div class="reactor-ring"></div>
-            </div>
+    <!-- START SCREEN -->
+    <div id="startScreen">
+        <div class="reactor">
+            <div class="reactor-core"></div>
+            <div class="ring"></div>
+            <div class="ring"></div>
         </div>
-        <div class="splash-title">F.R.I.D.A.Y.</div>
-        <div class="splash-subtitle">TOPOVSK INDUSTRIES</div>
-        <div class="loading-dots"><span></span><span></span><span></span></div>
+        <div class="title">F.R.I.D.A.Y.</div>
+        <div class="subtitle">TOPOVSK INDUSTRIES</div>
+        <button class="startBtn" onclick="startApp()">РќРђР§РђРўР¬</button>
     </div>
 
-    <div id="app">
+    <!-- MAIN APP -->
+    <div id="mainApp">
         <div class="header">
-            <div class="user-info">
-                <div class="avatar" id="avatar">T</div>
-                <div class="user-details">
-                    <div class="user-name" id="userName">Topovsk</div>
-                    <div class="user-status" id="userStatus">TOPOVSK INDUSTRIES</div>
-                </div>
+            <div class="avatar" id="avatar">T</div>
+            <div>
+                <div class="userName" id="userName">Topovsk</div>
+                <div class="userStatus" id="userStatus">TOPOVSK INDUSTRIES</div>
             </div>
-            <button class="settings-btn" onclick="toggleSettings()">⚙</button>
         </div>
-
+        
         <div id="chat">
-            <div class="welcome">
-                <div class="welcome-icon"><div class="welcome-reactor"></div></div>
-                <h1>F.R.I.D.A.Y.</h1>
-                <p>Все системы активны. Готова к работе, босс.</p>
-                <div class="suggestions">
-                    <button class="suggestion-btn" onclick="sendSuggestion('Расскажи о себе')"><span class="icon">👋</span>Расскажи о себе</button>
-                    <button class="suggestion-btn" onclick="sendSuggestion('Что ты умеешь?')"><span class="icon">✨</span>Что ты умеешь?</button>
-                    <button class="suggestion-btn" onclick="sendSuggestion('Напиши код на Python')"><span class="icon">💻</span>Напиши код</button>
-                    <button class="suggestion-btn" onclick="sendSuggestion('Помоги с задачей')"><span class="icon"></span>Помощь</button>
-                </div>
+            <div class="message ai" style="text-align:center;padding:30px 20px;">
+                <div style="font-size:48px;margin-bottom:15px;"></div>
+                <h2 style="margin-bottom:8px;">Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ, Р±РѕСЃСЃ</h2>
+                <p style="color:#00d4ff;font-size:13px;">Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ.<br>Р§РµРј РјРѕРіСѓ РїРѕРјРѕС‡СЊ?</p>
             </div>
         </div>
-
-        <div class="input-container">
-            <div class="input-wrapper">
-                <input type="text" id="msg-input" placeholder="Запрос, босс..." autocomplete="off">
-                <button id="send-btn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
-            </div>
+        
+        <div class="inputArea">
+            <input type="text" id="msgInput" placeholder="Р—Р°РїСЂРѕСЃ, Р±РѕСЃСЃ..." autocomplete="off">
+            <button id="sendBtn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         </div>
     </div>
 
@@ -187,74 +246,85 @@
         const tg = window.Telegram.WebApp;
         tg.expand();
         tg.ready();
+        
         const user = tg.initDataUnsafe.user;
         if (user && user.first_name) {
-            document.getElementById('userName').textContent = user.first_name;
-            document.getElementById('userStatus').textContent = 'ID: ' + user.id;
-            document.getElementById('avatar').textContent = user.first_name[0].toUpperCase();
+            document.getElementById("userName").textContent = user.first_name;
+            document.getElementById("userStatus").textContent = "ID: " + user.id;
+            document.getElementById("avatar").textContent = user.first_name[0].toUpperCase();
         }
-        const chat = document.getElementById('chat');
-        const input = document.getElementById('msg-input');
-        const sendBtn = document.getElementById('send-btn');
-        const welcome = document.querySelector('.welcome');
+        
+        function startApp() {
+            document.getElementById("startScreen").style.display = "none";
+            document.getElementById("mainApp").style.display = "flex";
+            
+            setTimeout(function() {
+                addMessage("ai", "рџ”· F.R.I.D.A.Y. РѕРЅР»Р°Р№РЅ. Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ, Р±РѕСЃСЃ!");
+            }, 500);
+        }
+        
+        const chat = document.getElementById("chat");
+        const msgInput = document.getElementById("msgInput");
+        const sendBtn = document.getElementById("sendBtn");
         
         function addMessage(role, text) {
-            if (welcome && role === 'user') welcome.style.display = 'none';
-            const msgDiv = document.createElement('div');
-            msgDiv.className = 'message ' + role;
-            const avatar = document.createElement('div');
-            avatar.className = 'msg-avatar';
-            avatar.textContent = role === 'user' ? (user && user.first_name ? user.first_name[0].toUpperCase() : 'T') : 'F';
-            const content = document.createElement('div');
-            content.className = 'msg-content';
-            content.textContent = text;
-            msgDiv.appendChild(avatar);
-            msgDiv.appendChild(content);
-            chat.appendChild(msgDiv);
+            const div = document.createElement("div");
+            div.className = "message " + role;
+            div.textContent = text;
+            chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
         
         function showTyping() {
-            const div = document.createElement('div');
-            div.className = 'message ai';
-            div.id = 'typing';
-            div.innerHTML = '<div class="msg-avatar">F</div><div class="msg-content typing"><span></span><span></span><span></span></div>';
+            const div = document.createElement("div");
+            div.className = "message ai typing";
+            div.id = "typing";
+            div.innerHTML = "<span></span><span></span><span></span>";
             chat.appendChild(div);
             chat.scrollTop = chat.scrollHeight;
         }
         
         function removeTyping() {
-            const t = document.getElementById('typing');
+            const t = document.getElementById("typing");
             if (t) t.remove();
         }
         
-        function sendSuggestion(text) { input.value = text; send(); }
-        
-        async function send() {
-            const text = input.value.trim();
+        function send() {
+            const text = msgInput.value.trim();
             if (!text) return;
-            addMessage('user', text);
-            input.value = '';
-            input.disabled = true;
+            
+            addMessage("user", text);
+            msgInput.value = "";
+            msgInput.disabled = true;
             sendBtn.disabled = true;
             showTyping();
+            
             try {
-                tg.sendData(JSON.stringify({type: 'message', text: text, userId: user?.id, timestamp: Date.now()}));
-                setTimeout(() => { removeTyping(); addMessage('ai', '✅ Сообщение отправлено. Ответ придёт в чат.'); }, 1500);
+                tg.sendData(JSON.stringify({
+                    type: "message",
+                    text: text,
+                    userId: user ? user.id : null,
+                    timestamp: Date.now()
+                }));
+                
+                setTimeout(function() {
+                    removeTyping();
+                    addMessage("ai", "вњ… РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ. РћС‚РІРµС‚ РїСЂРёРґС‘С‚ РІ С‡Р°С‚.");
+                }, 1500);
             } catch (e) {
                 removeTyping();
-                addMessage('ai', '❌ Ошибка: ' + e.message);
+                addMessage("ai", "вќЊ РћС€РёР±РєР°: " + e.message);
             } finally {
-                input.disabled = false;
+                msgInput.disabled = false;
                 sendBtn.disabled = false;
-                input.focus();
+                msgInput.focus();
             }
         }
         
-        function toggleSettings() { tg.showAlert('⚙️ Настройки\n\n🤖 Модель: GPT-5.6 Sol\n🎭 Режим: Обычный'); }
         sendBtn.onclick = send;
-        input.onkeypress = e => { if (e.key === 'Enter') send(); };
-        setTimeout(() => { if (welcome.style.display !== 'none') addMessage('ai', '🔷 F.R.I.D.A.Y. онлайн. Все системы активны. Готова к работе, босс!'); }, 4000);
+        msgInput.onkeypress = function(e) {
+            if (e.key === "Enter") send();
+        };
     </script>
 </body>
 </html>
