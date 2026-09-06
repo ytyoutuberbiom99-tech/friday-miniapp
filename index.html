@@ -247,7 +247,7 @@
         </div>
         <div class="title">F.R.I.D.A.Y.</div>
         <div class="subtitle">TOPOVSK INDUSTRIES</div>
-        <button class="startBtn" onclick="startApp()">НАЧАТЬ</button>
+        <button class="startBtn" onclick="startApp()">START</button>
     </div>
 
     <div id="mainApp">
@@ -261,14 +261,14 @@
         
         <div id="chat">
             <div class="message ai" style="text-align:center;padding:30px 20px;">
-                <div style="font-size:48px;margin-bottom:15px;">🔷</div>
-                <h2 style="margin-bottom:8px;">Добро пожаловать, босс</h2>
-                <p style="color:#00d4ff;font-size:13px;">Все системы активны. Готова к работе.<br>Чем могу помочь?</p>
+                <div style="font-size:48px;margin-bottom:15px;">&#x1F537;</div>
+                <h2 style="margin-bottom:8px;">Welcome, boss</h2>
+                <p style="color:#00d4ff;font-size:13px;">All systems active. Ready to work.<br>How can I help?</p>
             </div>
         </div>
         
         <div class="inputArea">
-            <input type="text" id="msgInput" placeholder="Запрос, босс..." autocomplete="off">
+            <input type="text" id="msgInput" placeholder="Request, boss..." autocomplete="off">
             <button id="sendBtn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
         </div>
     </div>
@@ -290,7 +290,7 @@
             document.getElementById("mainApp").style.display = "flex";
             
             setTimeout(function() {
-                addMessage("ai", "🔷 F.R.I.D.A.Y. онлайн. Все системы активны. Готова к работе, босс!");
+                addMessage("ai", "\u{1F537} F.R.I.D.A.Y. online. All systems active. Ready to work, boss!");
             }, 500);
         }
         
@@ -340,11 +340,11 @@
                 
                 setTimeout(function() {
                     removeTyping();
-                    addMessage("ai", "✅ Сообщение отправлено. Ответ придёт в чат.");
+                    addMessage("ai", "\u2705 Message sent. Reply will come in chat.");
                 }, 1500);
             } catch (e) {
                 removeTyping();
-                addMessage("ai", "❌ Ошибка: " + e.message);
+                addMessage("ai", "\u274C Error: " + e.message);
             } finally {
                 msgInput.disabled = false;
                 sendBtn.disabled = false;
