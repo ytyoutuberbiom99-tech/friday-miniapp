@@ -1,28 +1,46 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>F.R.I.D.A.Y.</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
-        body { background: #0d1117; color: #fff; height: 100vh; display: flex; flex-direction: column; }
-        .header { background: linear-gradient(180deg, #1a2332 0%, #0d1117 100%); padding: 15px 20px; border-bottom: 1px solid #00d4ff; display: flex; align-items: center; gap: 12px; }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #00d4ff 0%, #006699 100%); display: flex; align-items: center; justify-content: center; font-weight: bold; color: #000; font-size: 18px; box-shadow: 0 0 20px rgba(0,212,255,0.6); }
-        .user-info h2 { font-size: 16px; margin-bottom: 3px; }
-        .user-info p { font-size: 11px; color: #00d4ff; }
-        #chat { flex: 1; overflow-y: auto; padding: 20px; display: flex; flex-direction: column; gap: 12px; }
-        .message { max-width: 85%; padding: 12px 16px; border-radius: 18px; font-size: 14px; line-height: 1.5; animation: slideIn 0.3s ease-out; }
-        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .user { align-self: flex-end; background: linear-gradient(135deg, #00d4ff 0%, #006699 100%); color: #000; border-bottom-right-radius: 4px; }
-        .ai { align-self: flex-start; background: #161b22; border: 1px solid #30363d; border-bottom-left-radius: 4px; }
-        .input-area { padding: 15px 20px; background: #161b22; border-top: 1px solid #30363d; display: flex; gap: 10px; }
-        #msg-input { flex: 1; background: #0d1117; border: 1px solid #30363d; border-radius: 20px; padding: 12px 16px; color: #fff; font-size: 14px; outline: none; }
-        #msg-input:focus { border-color: #00d4ff; }
-        #send-btn { background: #00d4ff; border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-        #send-btn:hover { transform: scale(1.1); }
-        #send-btn svg { width: 20px; height: 20px; fill: #000; }
+        *{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+        body{background:linear-gradient(135deg,#0d1117 0%,#1a2332 100%);color:#fff;height:100vh;overflow:hidden;display:flex;flex-direction:column}
+        .header{background:rgba(13,17,23,0.95);backdrop-filter:blur(10px);padding:12px 20px;border-bottom:1px solid rgba(0,212,255,0.3);display:flex;align-items:center;gap:12px;box-shadow:0 4px 20px rgba(0,0,0,0.3)}
+        .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#00d4ff,#006699);display:flex;align-items:center;justify-content:center;font-weight:700;color:#000;font-size:18px;box-shadow:0 0 20px rgba(0,212,255,0.6);animation:pulse 2s infinite}
+        @keyframes pulse{0%,100%{box-shadow:0 0 20px rgba(0,212,255,0.6)}50%{box-shadow:0 0 30px rgba(0,212,255,0.9)}}
+        .user-info h2{font-size:15px;margin-bottom:2px;font-weight:600}
+        .user-info p{font-size:11px;color:#00d4ff}
+        #chat{flex:1;overflow-y:auto;padding:20px;display:flex;flex-direction:column;gap:12px}
+        .message{max-width:85%;padding:14px 18px;border-radius:18px;font-size:14px;line-height:1.5;animation:slideIn 0.4s cubic-bezier(0.68,-0.55,0.265,1.55)}
+        @keyframes slideIn{from{opacity:0;transform:translateY(20px) scale(0.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+        .user{align-self:flex-end;background:linear-gradient(135deg,#00d4ff,#006699);color:#000;border-bottom-right-radius:4px;box-shadow:0 4px 15px rgba(0,212,255,0.3)}
+        .ai{align-self:flex-start;background:rgba(22,27,34,0.8);border:1px solid rgba(0,212,255,0.2);border-bottom-left-radius:4px;box-shadow:0 4px 15px rgba(0,0,0,0.2)}
+        .input-area{padding:15px 20px;background:rgba(13,17,23,0.95);backdrop-filter:blur(10px);border-top:1px solid rgba(0,212,255,0.2);display:flex;gap:10px}
+        #msg-input{flex:1;background:rgba(13,17,23,0.8);border:1px solid rgba(0,212,255,0.3);border-radius:24px;padding:14px 18px;color:#fff;font-size:14px;outline:none;transition:all 0.3s}
+        #msg-input:focus{border-color:#00d4ff;box-shadow:0 0 20px rgba(0,212,255,0.2)}
+        #msg-input::placeholder{color:rgba(255,255,255,0.4)}
+        #send-btn{background:linear-gradient(135deg,#00d4ff,#006699);border:none;border-radius:50%;width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all 0.3s;box-shadow:0 4px 15px rgba(0,212,255,0.4)}
+        #send-btn:hover{transform:scale(1.1);box-shadow:0 6px 25px rgba(0,212,255,0.6)}
+        #send-btn:active{transform:scale(0.95)}
+        #send-btn svg{width:22px;height:22px;fill:#000}
+        .welcome{text-align:center;padding:40px 20px;animation:fadeIn 0.8s}
+        @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+        .welcome-icon{width:80px;height:80px;margin:0 auto 20px;background:linear-gradient(135deg,#00d4ff,#006699);border-radius:20px;display:flex;align-items:center;justify-content:center;font-size:40px;box-shadow:0 8px 30px rgba(0,212,255,0.4);animation:float 3s ease-in-out infinite}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        .welcome h1{font-size:28px;margin-bottom:10px;background:linear-gradient(135deg,#00d4ff,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .welcome p{color:rgba(0,212,255,0.7);font-size:14px}
+        .suggestions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:24px}
+        .suggestion-btn{background:rgba(22,27,34,0.6);border:1px solid rgba(0,212,255,0.2);border-radius:12px;padding:14px;color:#c9d1d9;font-size:13px;cursor:pointer;transition:all 0.2s;text-align:left}
+        .suggestion-btn:hover{background:rgba(0,212,255,0.1);border-color:#00d4ff;transform:translateY(-2px)}
+        .suggestion-btn .icon{font-size:20px;margin-bottom:6px;display:block}
+        .typing{display:flex;gap:5px;padding:14px 18px}
+        .typing span{width:8px;height:8px;background:#00d4ff;border-radius:50%;animation:bounce 1.4s infinite}
+        .typing span:nth-child(2){animation-delay:0.2s}
+        .typing span:nth-child(3){animation-delay:0.4s}
+        @keyframes bounce{0%,60%,100%{transform:translateY(0);opacity:0.4}30%{transform:translateY(-10px);opacity:1}}
     </style>
 </head>
 <body>
@@ -34,65 +52,34 @@
         </div>
     </div>
     <div id="chat">
-        <div class="message ai" style="text-align: center; padding: 30px 20px;">
-            <div style="font-size: 48px; margin-bottom: 15px;">🔷</div>
-            <h2 style="margin-bottom: 8px;">Добро пожаловать, босс</h2>
-            <p style="color: #00d4ff; font-size: 13px;">Все системы активны. Готова к работе.<br>Чем могу помочь?</p>
+        <div class="welcome">
+            <div class="welcome-icon">рџ”·</div>
+            <h1>Р”РѕР±СЂРѕ РїРѕР¶Р°Р»РѕРІР°С‚СЊ, Р±РѕСЃСЃ</h1>
+            <p>Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ.<br>Р§РµРј РјРѕРіСѓ РїРѕРјРѕС‡СЊ?</p>
+            <div class="suggestions">
+                <button class="suggestion-btn" onclick="sendSuggestion('Р Р°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ')"><span class="icon">рџ‘‹</span>Р Р°СЃСЃРєР°Р¶Рё Рѕ СЃРµР±Рµ</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('Р§С‚Рѕ С‚С‹ СѓРјРµРµС€СЊ?')"><span class="icon">вњЁ</span>Р§С‚Рѕ С‚С‹ СѓРјРµРµС€СЊ?</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('РќР°РїРёС€Рё РєРѕРґ')"><span class="icon">рџ’»</span>РќР°РїРёС€Рё РєРѕРґ</button>
+                <button class="suggestion-btn" onclick="sendSuggestion('РџРѕРјРѕРіРё СЃ Р·Р°РґР°С‡РµР№')"><span class="icon">рџ“ќ</span>РџРѕРјРѕС‰СЊ</button>
+            </div>
         </div>
     </div>
     <div class="input-area">
-        <input type="text" id="msg-input" placeholder="Запрос, босс..." autocomplete="off">
+        <input type="text" id="msg-input" placeholder="Р—Р°РїСЂРѕСЃ, Р±РѕСЃСЃ..." autocomplete="off">
         <button id="send-btn"><svg viewBox="0 0 24 24"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg></button>
     </div>
     <script>
-        const tg = window.Telegram.WebApp;
-        tg.expand();
-        tg.ready();
-        const user = tg.initDataUnsafe.user;
-        if (user) {
-            document.getElementById('userName').textContent = user.first_name || 'User';
-            document.getElementById('userId').textContent = 'ID: ' + user.id;
-            document.getElementById('avatar').textContent = (user.first_name || 'F')[0].toUpperCase();
-        }
-        const chat = document.getElementById('chat');
-        const input = document.getElementById('msg-input');
-        const sendBtn = document.getElementById('send-btn');
-        const welcome = chat.querySelector('.message');
-        
-        function addMessage(role, text) {
-            if (welcome && role === 'user') welcome.remove();
-            const div = document.createElement('div');
-            div.className = 'message ' + role;
-            div.textContent = text;
-            chat.appendChild(div);
-            chat.scrollTop = chat.scrollHeight;
-        }
-        
-        async function send() {
-            const text = input.value.trim();
-            if (!text) return;
-            addMessage('user', text);
-            input.value = '';
-            input.disabled = true;
-            sendBtn.disabled = true;
-            
-            try {
-                // ОТПРАВЛЯЕМ ДАННЫЕ ПРЯМО В БОТА ЧЕРЕЗ TELEGRAM API
-                tg.sendData(JSON.stringify({type: 'message', text: text, userId: user?.id, timestamp: Date.now()}));
-                setTimeout(() => {
-                    addMessage('ai', '✅ Сообщение отправлено. Ответ придёт в чат.');
-                }, 1000);
-            } catch (e) {
-                addMessage('ai', '❌ Ошибка: ' + e.message);
-            } finally {
-                input.disabled = false;
-                sendBtn.disabled = false;
-                input.focus();
-            }
-        }
-        
-        sendBtn.onclick = send;
-        input.onkeypress = e => { if (e.key === 'Enter') send(); };
+        const tg=window.Telegram.WebApp;tg.expand();tg.ready();
+        const user=tg.initDataUnsafe.user;
+        if(user){document.getElementById('userName').textContent=user.first_name||'User';document.getElementById('userId').textContent='ID: '+user.id;document.getElementById('avatar').textContent=(user.first_name||'F')[0].toUpperCase();}
+        const chat=document.getElementById('chat');const input=document.getElementById('msg-input');const sendBtn=document.getElementById('send-btn');const welcome=chat.querySelector('.welcome');
+        function addMessage(role,text){if(welcome&&role==='user')welcome.remove();const div=document.createElement('div');div.className='message '+role;div.textContent=text;chat.appendChild(div);chat.scrollTop=chat.scrollHeight;}
+        function showTyping(){const div=document.createElement('div');div.className='message ai typing';div.id='typing';div.innerHTML='<span></span><span></span><span></span>';chat.appendChild(div);chat.scrollTop=chat.scrollHeight;}
+        function removeTyping(){const t=document.getElementById('typing');if(t)t.remove();}
+        function sendSuggestion(text){input.value=text;send();}
+        async function send(){const text=input.value.trim();if(!text)return;addMessage('user',text);input.value='';input.disabled=true;sendBtn.disabled=true;showTyping();try{tg.sendData(JSON.stringify({type:'message',text:text,userId:user?.id,timestamp:Date.now()}));setTimeout(()=>{removeTyping();addMessage('ai','вњ… РЎРѕРѕР±С‰РµРЅРёРµ РѕС‚РїСЂР°РІР»РµРЅРѕ. РћС‚РІРµС‚ РїСЂРёРґС‘С‚ РІ С‡Р°С‚.');},1000);}catch(e){removeTyping();addMessage('ai','вќЊ РћС€РёР±РєР°: '+e.message);}finally{input.disabled=false;sendBtn.disabled=false;input.focus();}}
+        sendBtn.onclick=send;input.onkeypress=e=>{if(e.key==='Enter')send();};
+        setTimeout(()=>{if(welcome)addMessage('ai','рџ”· F.R.I.D.A.Y. РѕРЅР»Р°Р№РЅ. Р’СЃРµ СЃРёСЃС‚РµРјС‹ Р°РєС‚РёРІРЅС‹. Р“РѕС‚РѕРІР° Рє СЂР°Р±РѕС‚Рµ, Р±РѕСЃСЃ!');},2000);
     </script>
 </body>
 </html>
